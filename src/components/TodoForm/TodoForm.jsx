@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 export const TodoForm = ({ addTodo }) => {
   const [title, setTitle] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    addTodo(title);
-    setTitle('');
+    if (title.length > 0) {
+      addTodo(title);
+      setTitle('');
+    }
   };
 
   return (
@@ -22,4 +25,8 @@ export const TodoForm = ({ addTodo }) => {
       />
     </form>
   );
+};
+
+TodoForm.propTypes = {
+  addTodo: PropTypes.func.isRequired,
 };
