@@ -11,7 +11,7 @@ function App() {
   const filterTodos = (filterBy) => {
     switch (filterBy) {
       case 'active':
-        return todos.map(todo => !todo.completed);
+        return todos.filter(todo => !todo.completed);
       case 'completed':
         return todos.filter(todo => todo.completed);
       default:
@@ -54,10 +54,23 @@ function App() {
     }
   };
 
+  const handleComplete = (todoId) => {
+    setTodos(todos.map((todo) => {
+      if (todo.id === todoId) {
+        return {
+          ...todo,
+          completed: true,
+        };
+      }
+
+      return todo;
+    }));
+  };
+
   const changeFilter = filterValue => setFilter(filterValue);
 
   const filteredTodos = useMemo(
-    () => filterTodos(filter), [filter, todos, completed, filterTodos],
+    () => filterTodos(filter), [filter, filterTodos],
   );
 
   return (
@@ -81,6 +94,7 @@ function App() {
         <TodoList
           filteredTodos={filteredTodos}
           removeTodo={removeTodo}
+          onComplete={handleComplete}
         />
       </section>
 

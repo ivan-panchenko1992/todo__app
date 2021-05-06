@@ -21,7 +21,7 @@ export const TodoFilter = ({ changeFilter, filter }) => (
         className={filter === 'active'
           ? 'selected' : ''
       }
-        onClick={() => changeFilter('activ')}
+        onClick={() => changeFilter('active')}
       >
         Active
       </a>
