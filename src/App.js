@@ -1,29 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { TodoList } from './components/TodoList';
 import { TodoForm } from './components/TodoForm/TodoForm';
 import { TodoFilter } from './components/TodoFilter';
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [select, setSelect] = useState('all');
+  const [filter, setFilter] = useState('all');
+  const [completed, setCompleted] = useState(false);
 
-  useEffect(() => {
-    if (!todos.length) {
-      return;
-    }
-
-    switch (select) {
+  const filterTodos = (filterBy) => {
+    switch (filterBy) {
       case 'active':
-        setTodos(noCompletedTodos);
-        break;
+        return todos.map(todo => !todo.completed);
       case 'completed':
-        setTodos(completedTodos);
-        break;
+        return todos.filter(todo => todo.completed);
       default:
-        setTodos(todos);
-        break;
+        return todos;
     }
-  }, [select]);
+  };
 
   const addTodo = (title) => {
     setTodos(prevTodos => [
@@ -34,39 +28,70 @@ function App() {
       }]);
   };
 
-  const completedTodos = todos.map(todo => todo.completed);
-  const noCompletedTodos = todos.map(todo => !todo.completed);
   const deleteCompleted = () => {
-    setTodos(prevTodos => prevTodos.map(todo => todo.completed));
+    setTodos(todos.filter(todo => !todo.completed));
   };
 
   const removeTodo = (todoId) => {
     setTodos(todos.filter(todo => todo.id !== todoId));
   };
 
-  const changeFilter = filter => setSelect(filter);
+  const CheckBoxToggle = () => {
+    if (completed) {
+      setCompleted(false);
+      setTodos(todos.map(todo => ({
+        ...todo,
+        completed: true,
+      })));
+    }
+
+    if (!completed) {
+      setCompleted(true);
+      setTodos(todos.map(todo => ({
+        ...todo,
+        completed: false,
+      })));
+    }
+  };
+
+  const changeFilter = filterValue => setFilter(filterValue);
+
+  const filteredTodos = useMemo(
+    () => filterTodos(filter), [filter, todos, completed, filterTodos],
+  );
 
   return (
     <section className="todoapp">
       <header className="header">
         <h1>todos</h1>
-        <TodoForm addTodo={addTodo} />
+        <TodoForm
+          addTodo={addTodo}
+          filter={filter}
+        />
       </header>
 
       <section className="main">
-        <input type="checkbox" id="toggle-all" className="toggle-all" />
+        <input
+          type="checkbox"
+          id="toggle-all"
+          className="toggle-all"
+          onClick={CheckBoxToggle}
+        />
         <label htmlFor="toggle-all">Mark all as complete</label>
         <TodoList
-          todos={todos}
+          filteredTodos={filteredTodos}
           removeTodo={removeTodo}
         />
       </section>
 
       <footer className="footer">
         <span className="todo-count">
-          3 items left
+          {`${todos.length} items left`}
         </span>
-        <TodoFilter changeFilter={changeFilter} />
+        <TodoFilter
+          changeFilter={changeFilter}
+          filter={filter}
+        />
         <button
           type="button"
           className="clear-completed"

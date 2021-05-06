@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export const TodoItem = ({ todo, removeTodo }) => {
   return (
-    <li key={todo.id}>
+    <li>
       <div className="view">
         <input type="checkbox" className="toggle" />
         <label>{todo.title}</label>

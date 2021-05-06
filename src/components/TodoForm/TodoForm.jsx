@@ -6,10 +6,12 @@ export const TodoForm = ({ addTodo }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (title.length > 0) {
+    if (title.trim().length > 0) {
       addTodo(title);
       setTitle('');
     }
+
+    setTitle('');
   };
 
   return (

@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { TodoItem } from '../TodoItem/TodoItem';
 
-export const TodoList = ({ todos, removeTodo }) => (
+export const TodoList = ({ filteredTodos, removeTodo }) => (
   <ul className="todo-list">
-    {todos.map(todo => (
-      <TodoItem
-        todo={todo}
-        removeTodo={removeTodo}
-      />
+    {filteredTodos.map(todo => (
+      <Fragment key={todo.id}>
+        <TodoItem
+          todo={todo}
+          removeTodo={removeTodo}
+        />
+      </Fragment>
     ))}
   </ul>
 );
+
+// TodoList.propTypes = {
+//   filteredTodos: PropTypes.arrayOf(
+//     PropTypes.shape({
+
+//     })
+//   )
+// };

@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const TodoFilter = ({ changeFilter }) => (
+export const TodoFilter = ({ changeFilter, filter }) => (
   <ul className="filters">
     <li>
       <a
         href="#/"
-        className="selected"
+        className={filter === 'all'
+          ? 'selected' : ''
+        }
         onClick={() => changeFilter('all')}
       >
         All
@@ -16,6 +18,9 @@ export const TodoFilter = ({ changeFilter }) => (
     <li>
       <a
         href="#/active"
+        className={filter === 'active'
+          ? 'selected' : ''
+      }
         onClick={() => changeFilter('activ')}
       >
         Active
@@ -25,6 +30,9 @@ export const TodoFilter = ({ changeFilter }) => (
     <li>
       <a
         href="#/completed"
+        className={filter === 'completed'
+          ? 'selected' : ''
+      }
         onClick={() => changeFilter('completed')}
       >
         Completed
@@ -35,4 +43,5 @@ export const TodoFilter = ({ changeFilter }) => (
 
 TodoFilter.propTypes = {
   changeFilter: PropTypes.func.isRequired,
+  filter: PropTypes.string.isRequired,
 };
