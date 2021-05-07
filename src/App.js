@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { TodoList } from './components/TodoList';
 import { TodoForm } from './components/TodoForm/TodoForm';
 import { TodoFilter } from './components/TodoFilter';
@@ -8,7 +8,7 @@ function App() {
   const [filter, setFilter] = useState('all');
   const [completed, setCompleted] = useState(false);
 
-  const filterTodos = (filterBy) => {
+  const filterTodos = useCallback((filterBy) => {
     switch (filterBy) {
       case 'active':
         return todos.filter(todo => !todo.completed);
@@ -17,7 +17,7 @@ function App() {
       default:
         return todos;
     }
-  };
+  }, [todos]);
 
   const addTodo = (title) => {
     setTodos(prevTodos => [
@@ -67,6 +67,12 @@ function App() {
     }));
   };
 
+  const editTitle = (selectedTodo, editedTitle) => {
+    const findSelectedTodo = todos.find(todo => selectedTodo.id === todo.id);
+
+    findSelectedTodo.title = editedTitle;
+  };
+
   const changeFilter = filterValue => setFilter(filterValue);
 
   const filteredTodos = useMemo(
@@ -95,6 +101,7 @@ function App() {
           filteredTodos={filteredTodos}
           removeTodo={removeTodo}
           onComplete={handleComplete}
+          editTitle={editTitle}
         />
       </section>
 
