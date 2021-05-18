@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
-export const TodoItem = ({ todo, removeTodo, onComplete, editTitle }) => {
+export const TodoItem = ({ todo, removeTodo, onComplete, addNewTitle }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editedTitle, setEditTitle] = useState('');
+
+  const handleChangeTitle = (event, todoToedit) => {
+    if (event.key === 'Enter' && editedTitle !== '') {
+      setIsEdit(false);
+      addNewTitle(todoToedit, editedTitle);
+      setEditTitle('');
+    }
+
+    if (event.key === 'Escape') {
+      setIsEdit(false);
+      setEditTitle('');
+    }
+  };
 
   return (
     <li
       onDoubleClick={() => setIsEdit(true)}
-      className={isEdit && 'editing'}
+      className={classNames(
+        { completed: todo.completed, editing: isEdit },
+      )}
+
     >
       <div className={todo.completed ? 'completed' : 'view'}>
         <input
           type="checkbox"
           checked={todo.completed}
           className="toggle"
-          onClick={() => onComplete(todo.id)}
+          onChange={() => onComplete(todo.id)}
         />
         <label>{todo.title}</label>
         <button
@@ -29,19 +46,19 @@ export const TodoItem = ({ todo, removeTodo, onComplete, editTitle }) => {
         className="edit"
         value={editedTitle}
         onChange={event => setEditTitle(event.target.value)}
-        onKeyDown={() => editTitle(todo, editedTitle)}
+        onKeyDown={event => handleChangeTitle(event, todo)}
       />
     </li>
   );
 };
 
 TodoItem.propTypes = {
-  editTitle: PropTypes.func.isRequired,
+  addNewTitle: PropTypes.func.isRequired,
   onComplete: PropTypes.func.isRequired,
   removeTodo: PropTypes.func.isRequired,
   todo: PropTypes.shape({
     completed: PropTypes.bool.isRequired,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
   }).isRequired,
 };

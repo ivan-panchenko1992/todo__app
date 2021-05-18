@@ -2,9 +2,10 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { TodoList } from './components/TodoList';
 import { TodoForm } from './components/TodoForm/TodoForm';
 import { TodoFilter } from './components/TodoFilter';
+import { useLocalStorage } from './LocalStorage';
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useLocalStorage('todos', []);
   const [filter, setFilter] = useState('all');
   const [completed, setCompleted] = useState(false);
 
@@ -59,7 +60,7 @@ function App() {
       if (todo.id === todoId) {
         return {
           ...todo,
-          completed: true,
+          completed: !todo.completed,
         };
       }
 
@@ -67,7 +68,7 @@ function App() {
     }));
   };
 
-  const editTitle = (selectedTodo, editedTitle) => {
+  const addNewTitle = (selectedTodo, editedTitle) => {
     const findSelectedTodo = todos.find(todo => selectedTodo.id === todo.id);
 
     findSelectedTodo.title = editedTitle;
@@ -101,7 +102,7 @@ function App() {
           filteredTodos={filteredTodos}
           removeTodo={removeTodo}
           onComplete={handleComplete}
-          editTitle={editTitle}
+          addNewTitle={addNewTitle}
         />
       </section>
 
