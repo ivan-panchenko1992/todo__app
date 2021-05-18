@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 export const TodoItem = ({ todo, removeTodo, onComplete, addNewTitle }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [editedTitle, setEditTitle] = useState('');
+  const [editedTitle, setEditTitle] = useState(todo.title);
 
   const handleChangeTitle = (event, todoToedit) => {
     if (event.key === 'Enter' && editedTitle !== '') {
@@ -15,7 +15,7 @@ export const TodoItem = ({ todo, removeTodo, onComplete, addNewTitle }) => {
 
     if (event.key === 'Escape') {
       setIsEdit(false);
-      setEditTitle('');
+      setEditTitle(todo.title);
     }
   };
 
